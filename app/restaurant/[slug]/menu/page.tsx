@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient();
 
-const fetchItems = async(slug:string) => {
+const fetchRestaurantMenu  = async(slug:string) => {
     const restaurant = await prisma.restaurant.findUnique({
         where : {
             slug
@@ -17,23 +17,20 @@ const fetchItems = async(slug:string) => {
         throw new Error()
     }
 
-    return restaurant
+    return restaurant.items
 }
 
 
 async function RestaurantMenu({params}:{params:{slug:string}}){
-    const menu = await fetchItems(params.slug)
+    const menu = await fetchRestaurantMenu(params.slug)
     console.log({menu})
     return (
-    
         <>
             <div className="bg-white w-[100%] rounded p-3 shadow">
             <RestaurantNavBar slug={params.slug}/>
-            <Menu />
+            <Menu menu={menu}/>
             </div>
         </>
-   
-  
   )
 }
 

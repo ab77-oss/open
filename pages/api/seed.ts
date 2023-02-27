@@ -589,8 +589,7 @@ export default async function handler(
       },
       {
         name: "Burrata Paapdi Chaat",
-        description:
-          "Our house made paapdi served with spiced potatoes and burrata cheese dressed with in house chutneys",
+        description:"Our house made paapdi served with spiced potatoes and burrata cheese dressed with in house chutneys",
         price: "$16.00",
         restaurant_id: vivaanId,
       },

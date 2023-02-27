@@ -40,7 +40,6 @@ export default async function Home() {
          {restaurants.map((restaurant)=> (
              <RestaurantCard key={restaurant.id} restaurant={restaurant}/>
          ) )}
-         
         </div>
       </main>
     </>
