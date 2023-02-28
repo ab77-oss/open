@@ -1,5 +1,3 @@
-
-
 import Price from '@/app/components/Price'
 import { PrismaClient,Location, Cuisine, PRICE } from '@prisma/client'
 import Link from 'next/link'

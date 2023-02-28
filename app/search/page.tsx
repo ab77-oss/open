@@ -7,17 +7,25 @@ import { PRICE, PrismaClient, Cuisine, Location } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const fetchRestaurantByCity= async (city:string) => {
-    const  restaurants = await prisma.restaurant.findMany({
+const fetchRestaurant = async (city:string, cuisine:string, price:PRICE) => {
+    const restaurants = await prisma.restaurant.findMany({
         where: {
-            location : {
+            location:{
                 name: {
-                    equals: city
+                    equals:city.toLowerCase()
                 }
+            },
+            cuisine:{
+                name:{
+                    equals:cuisine
+                }
+            },
+            price : {
+                equals:price
             }
+
         },
-     
-        select: {
+        select :{
             id:true,
             name:true,
             main_image:true,
@@ -31,6 +39,7 @@ const fetchRestaurantByCity= async (city:string) => {
         throw new Error()
     }
     return restaurants
+
 }
 
 
@@ -46,14 +55,12 @@ const fetchCuisines = async () => {
 
 
 
-async function Search({searchParams}:{searchParams:{city:string,cuisine?:string, price?:PRICE }}) {
+async function Search({searchParams}:{searchParams:{city:string,cuisine:string, price:PRICE }}) {
 
- const restaurants = await fetchRestaurantByCity(searchParams.city)
+ const restaurants = await fetchRestaurant(searchParams.city, searchParams.cuisine, searchParams.price)
 
  const locations = await fetchLocations();
  const cuisines = await fetchCuisines();
-
-
 
   return (
     <>
