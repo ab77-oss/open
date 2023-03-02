@@ -32,7 +32,8 @@ const fetchRestaurant = async (city:string, cuisine:string, price:PRICE) => {
             price:true,
             cuisine:true,
             location:true,
-            slug:true
+            slug:true,
+            reviews:true
         }
     });
     if(!restaurants){
