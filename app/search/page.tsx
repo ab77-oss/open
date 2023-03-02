@@ -3,6 +3,7 @@ import Header from './components/Header'
 import SearchSideBar from './components/SearchSideBar'
 import RestaurantCard from './components/RestaurantCard'
 import { PRICE, PrismaClient, Cuisine, Location } from '@prisma/client'
+import { notFound } from 'next/navigation'
 
 
 const prisma = new PrismaClient()
@@ -38,6 +39,7 @@ const fetchRestaurant = async (city:string, cuisine:string, price:PRICE) => {
     });
     if(!restaurants){
         throw new Error()
+        notFound();
     }
     return restaurants
 
