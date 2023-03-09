@@ -4,8 +4,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import AuthModalInput from './AuthModalInput';
+import useAuth from '@/hooks/useAuth';
+import { AuthenticationContext } from '../context/AuthContext';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Alert } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -19,9 +23,12 @@ const style = {
 };
 
 export default function AuthModal({isSignin}:{isSignin:boolean}) {
+ 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const {signin} = useAuth()
+  const {loading, data, error} = useContext(AuthenticationContext)
   
   const renderContent = (signinContent: string, signupContent:string) => {
     return  isSignin ? signinContent : signupContent
@@ -61,7 +68,13 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
       }
     }
     setDisabled(true)
-  }, [inputs])
+  }, [inputs]);
+
+  const handleClick = () => {
+    if(isSignin){
+      signin({email:inputs.email, password:inputs.password})
+    }
+  }
 
   return (
     <div>
@@ -79,7 +92,18 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
         className='w-72 m-auto'
       >
         <Box sx={style}>
-          <div className="p-2 h-[600px]">
+        {loading ? ( 
+          <div className='PY-26 pX-2 h-[600p] flex justify-center'>
+            <CircularProgress />
+          </div>
+        ):(
+        <div className="p-2 h-[600px]">
+          {error ? (
+          <Alert severity="error" className='mb-4'>
+            {error}
+            </Alert>)
+            :
+            null}
             <div className="uppercase font-bold text-center pb-2 border-b mb-2">
                 {renderContent("Sign in", "Create Account")}
             </div>
@@ -92,11 +116,15 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
                   handleChangeInput={handleChangeInput} 
                   isSignin={isSignin}
                 />
-                <button className='uppercase bg-red-600 w-full p-3 text-white rounded text-sm mb-5 disabled:bg-gray-400' disabled={disabled}>
+                <button 
+                  className='uppercase bg-red-600 w-full p-3 text-white rounded text-sm mb-5 disabled:bg-gray-400' 
+                  disabled={disabled}
+                  onClick={handleClick}
+                  >
                 {renderContent("Sign In", "Create Account")}
                 </button>
             </div>
-          </div>
+          </div>)}
         </Box>
       </Modal>
     </div>
