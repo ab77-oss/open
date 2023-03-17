@@ -27,7 +27,7 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const {signin} = useAuth()
+  const {signin, signup} = useAuth()
   const {loading, data, error} = useContext(AuthenticationContext)
   
   const renderContent = (signinContent: string, signupContent:string) => {
@@ -38,41 +38,42 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
     setInputs({
       ...inputs,
       [e.target.name]:e.target.value
-    })
-  }
+    });
+  };
   const [inputs, setInputs] = useState({
     firstName:"",
     lastName:"",
     email:"",
-    phone:"",
+    phone:0,
+    password:"",
     city:"",
-    password:""
+    
   });
 
   const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
-    if(isSignin){
-      if(inputs.password && inputs.email){
-        return setDisabled(false)
-      }else {
-        if(
-          inputs.firstName && 
-          inputs.lastName && 
-          inputs.email && 
-          inputs.phone && 
-          inputs.password && 
-          inputs.city){
-          return setDisabled(false)
-        }
-      }
+    if(isSignin && inputs.password && inputs.email){
+         return setDisabled(false)
     }
+    if(!isSignin && 
+      inputs.firstName && 
+      inputs.lastName && 
+      inputs.email && 
+      inputs.phone && 
+      inputs.password && 
+      inputs.city){
+           return setDisabled(false)
+      }
+    
     setDisabled(true)
   }, [inputs]);
 
   const handleClick = () => {
     if(isSignin){
-      signin({email:inputs.email, password:inputs.password})
+      signin({email:inputs.email, password:inputs.password},handleClose)
+    }else {
+      signup({firstName:inputs.firstName, lastName:inputs.lastName,email:inputs.email, phone:inputs.phone,   password:inputs.password, city:inputs.city},handleClose)
     }
   }
 
@@ -93,7 +94,7 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
       >
         <Box sx={style}>
         {loading ? ( 
-          <div className='PY-26 pX-2 h-[600p] flex justify-center'>
+          <div className='py-26 px-2 h-[600p] flex justify-center'>
             <CircularProgress />
           </div>
         ):(
@@ -105,11 +106,17 @@ export default function AuthModal({isSignin}:{isSignin:boolean}) {
             :
             null}
             <div className="uppercase font-bold text-center pb-2 border-b mb-2">
+                <p className='text-sm'>
                 {renderContent("Sign in", "Create Account")}
+                </p>
+                <p>
+                  {data?.firstName}{data?.lastName}
+                </p>
             </div>
             <div className="m-auto">
                 <h2 className="text-2xl font-light text-center">
                     {renderContent("Log Into Your Account", "Create Your OpenTable Account")}
+                   
                 </h2>
                 <AuthModalInput 
                   inputs={inputs} 

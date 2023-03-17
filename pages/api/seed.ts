@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  //   await prisma.table.deleteMany();
+  await prisma.table.deleteMany();
   await prisma.review.deleteMany();
   await prisma.item.deleteMany();
   await prisma.restaurant.deleteMany();
@@ -589,7 +589,8 @@ export default async function handler(
       },
       {
         name: "Burrata Paapdi Chaat",
-        description:"Our house made paapdi served with spiced potatoes and burrata cheese dressed with in house chutneys",
+        description:
+          "Our house made paapdi served with spiced potatoes and burrata cheese dressed with in house chutneys",
         price: "$16.00",
         restaurant_id: vivaanId,
       },
@@ -1304,22 +1305,23 @@ export default async function handler(
       ],
     });
 
-    // await prisma.table.createMany({
-    //   data: [
-    //     {
-    //       restaurant_id: vivaanId,
-    //       seats: 4,
-    //     },
-    //     {
-    //       restaurant_id: vivaanId,
-    //       seats: 4,
-    //     },
-    //     {
-    //       restaurant_id: vivaanId,
-    //       seats: 2,
-    //     },
-    //   ],
-    // });
+    await prisma.table.createMany({
+      data: [
+        {
+          restaurant_id: vivaanId,
+          seats: 4,
+        },
+        {
+          restaurant_id: vivaanId,
+          seats: 4,
+        },
+        {
+          restaurant_id: vivaanId,
+          seats: 2,
+        },
+      ],
+    });
 
   res.status(200).json({ name: "hello" });
 }
+

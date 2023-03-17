@@ -5,7 +5,7 @@ interface Props {
         firstName:string,
         lastName:string,
         email:string,
-        phone:string,
+        phone:number,
         city:string,
         password:string
     };

@@ -72,8 +72,8 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse){
         .setExpirationTime("24h")
         .sign(secret)
       
+    setCookie("jwt", token, {req,res, maxAge:60*6*24})
 
-        
     return res.status(200).json({
         firstName:userWithEmail.first_name,
         lastName:userWithEmail.last_name,

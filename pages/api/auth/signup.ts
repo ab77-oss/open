@@ -3,6 +3,7 @@ import validator from "validator";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt'
 import * as jose from "jose"
+import { setCookie } from "cookies-next";
 
 // validation the user input
 
@@ -86,11 +87,19 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     const  token = await new jose.SignJWT({email:user.email})
         .setProtectedHeader({alg})
         .setExpirationTime("24h")
-        .sign(secret)
+        .sign(secret);
+        
+        setCookie("jwt", token, {req,res, maxAge:60*6*24})
 
-    return res.status(200).json({
-        token
-    })
+        return res.status(200).json({
+            firstName:user.first_name,
+            lastName:user.last_name,
+            email:user.email,
+            phone:user.phone,
+            city:user.city
+    
+    
+        });
    }
 
    return res.status(404).json("Unknown endpoint")
